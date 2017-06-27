@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.ItemMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.pojo.Item" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="SELL_POINT" property="sellPoint" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="BARCODE" property="barcode" jdbcType="VARCHAR" />
+    <result column="IMAGE" property="image" jdbcType="VARCHAR" />
+    <result column="CID" property="cid" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.jk.pojo.Item" >
+    <id column="i_id" property="id" jdbcType="DECIMAL" />
+    <result column="i_title" property="title" jdbcType="VARCHAR" />
+    <result column="i_sell_point" property="sellPoint" jdbcType="VARCHAR" />
+    <result column="i_price" property="price" jdbcType="DECIMAL" />
+    <result column="i_num" property="num" jdbcType="DECIMAL" />
+    <result column="i_barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="i_image" property="image" jdbcType="VARCHAR" />
+    <result column="i_status" property="status" jdbcType="DECIMAL" />
+    <result column="i_created" property="created" jdbcType="TIMESTAMP" />
+    <result column="i_updated" property="updated" jdbcType="TIMESTAMP" />
+    <association property="itemCat" javaType="com.jk.pojo.ItemCat">
+      <result property="id" column="c_id" jdbcType="DECIMAL" />
+      <result property="name" column="c_NAME" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TITLE, SELL_POINT, PRICE, NUM, BARCODE, IMAGE, CID, STATUS, CREATED, UPDATED
+  </sql>
+
+  <sql id="Base_Column_List_tow" >
+    t1.ID as i_id, t1.TITLE as i_title, t1.SELL_POINT as i_sell_point, t1.PRICE as i_price,
+    t1.NUM as i_num, t1.BARCODE as i_barcode, t1.IMAGE as i_image, t1.STATUS as i_status, t1.CREATED as i_created,
+    t1.UPDATED as i_updated,t2.id as c_id,t2.name as c_name
+  </sql>
+
+
+  <select id="queryCount" parameterType="com.jk.util.PageUtil" resultType="Integer">
+    select count(1) FROM  tb_item t1 join tb_item_cat t2  on t1.cid = t2.id
+    <where>
+      <if test="whereMap!=null and whereMap.title!=null and whereMap.title!=''">
+        and title like '%${whereMap.title}%'
+      </if>
+      <if test="whereMap !=null and whereMap.minPrice = null and whereMap.minPrice!=''">
+        and PRICE &gt; whereMap.minPrice
+      </if>
+      <if test="whereMap !=null and whereMap.maxPrice = null and whereMap.maxPrice!=''">
+        and PRICE &lt; whereMap.maxPrice
+      </if>
+    </where>
+  </select>
+
+  <select id="queryList" resultMap="BaseResultMap1" parameterType="com.jk.util.PageUtil">
+
+    select * from
+    (
+    select s.*,rownum rm FROM
+    (
+    select <include refid="Base_Column_List_tow"/> FROM tb_item t1 join tb_item_cat t2 on t1.cid = t2.id
+    <where>
+      <if test="whereMap!=null and whereMap.title!=null and whereMap.title!=''">
+        and title like '%${whereMap.title}%'
+      </if>
+      <if test="whereMap !=null and whereMap.minPrice = null and whereMap.minPrice!=''">
+        and PRICE &gt; whereMap.minPrice
+      </if>
+      <if test="whereMap !=null and whereMap.maxPrice = null and whereMap.maxPrice!=''">
+        and PRICE &lt; whereMap.maxPrice
+      </if>
+    </where>
+    )
+    s where rownum &lt;= #{end}
+    )
+    where rm &gt; #{start}
+  </select>
+
+
+  <delete id="deleteItem" parameterType="java.util.ArrayList">
+    delete from tb_item where id
+    <foreach collection="list" close=")" open=" in (" separator="," item="id" index="i">
+      #{id}
+    </foreach>
+  </delete>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from TB_ITEM
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from TB_ITEM
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jk.pojo.Item" >
+    insert into TB_ITEM (ID, TITLE, SELL_POINT, 
+      PRICE, NUM, BARCODE, 
+      IMAGE, CID, STATUS, 
+      CREATED, UPDATED)
+    values (#{id,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, #{sellPoint,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{barcode,jdbcType=VARCHAR}, 
+      #{image,jdbcType=VARCHAR}, #{cid,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, 
+      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP})
+  </insert>
+
+
+
+  <insert id="addItem" parameterType="com.jk.pojo.Item" useGeneratedKeys="true" keyProperty="id">
+    <selectKey keyProperty="id" keyColumn="id" order="BEFORE" resultType="java.math.BigDecimal">
+      SELECT item_id.nextval as id FROM dual
+    </selectKey>
+    INSERT INTO
+      TB_ITEM (ID, TITLE, SELL_POINT, PRICE, NUM, CID, STATUS, CREATED, UPDATED)
+    VALUES
+    (
+    #{id,jdbcType=DECIMAL},
+    #{title,jdbcType=VARCHAR},
+    #{sellPoint,jdbcType=VARCHAR},
+    #{price,jdbcType=DECIMAL},
+    #{num,jdbcType=DECIMAL},
+    #{cid,jdbcType=DECIMAL},
+    #{status,jdbcType=DECIMAL},
+    #{created,jdbcType=TIMESTAMP},
+    #{updated,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+
+
+
+  <insert id="insertSelective" parameterType="com.jk.pojo.Item" >
+    insert into TB_ITEM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="sellPoint != null" >
+        SELL_POINT,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+      <if test="barcode != null" >
+        BARCODE,
+      </if>
+      <if test="image != null" >
+        IMAGE,
+      </if>
+      <if test="cid != null" >
+        CID,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sellPoint != null" >
+        #{sellPoint,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="barcode != null" >
+        #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.pojo.Item" >
+    update TB_ITEM
+    <set >
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="sellPoint != null" >
+        SELL_POINT = #{sellPoint,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        NUM = #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="barcode != null" >
+        BARCODE = #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        IMAGE = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null" >
+        CID = #{cid,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.pojo.Item" >
+    update TB_ITEM
+    set TITLE = #{title,jdbcType=VARCHAR},
+      SELL_POINT = #{sellPoint,jdbcType=VARCHAR},
+      PRICE = #{price,jdbcType=DECIMAL},
+      NUM = #{num,jdbcType=DECIMAL},
+      BARCODE = #{barcode,jdbcType=VARCHAR},
+      IMAGE = #{image,jdbcType=VARCHAR},
+      CID = #{cid,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateItem" parameterType="com.jk.pojo.Item" >
+    update TB_ITEM
+    set TITLE = #{title,jdbcType=VARCHAR},
+    SELL_POINT = #{sellPoint,jdbcType=VARCHAR},
+    PRICE = #{price,jdbcType=DECIMAL},
+    NUM = #{num,jdbcType=DECIMAL},
+    CID = #{cid,jdbcType=DECIMAL},
+    STATUS = #{status,jdbcType=DECIMAL},
+    UPDATED = #{updated,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

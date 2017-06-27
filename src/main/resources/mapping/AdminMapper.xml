@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.AdminMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.pojo.Admin" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ADMIN_NAME" property="adminName" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="TIMESTAMP" />
+    <result column="LONGIN_TIME" property="longinTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ADMIN_NAME, PHONE, EMAIL, PASSWORD, CREATED, UPDATED, LONGIN_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from TB_ADMIN
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+
+
+  <!--按名称查询-->
+  <select id="queryAdminByName" resultMap="BaseResultMap" parameterType="com.jk.pojo.Admin" >
+    select
+    <include refid="Base_Column_List" />
+    from TB_ADMIN
+    where ADMIN_NAME = #{loginname,jdbcType=VARCHAR}
+  </select>
+  <!--按emali查询-->
+  <select id="queryAdminByEmail" resultMap="BaseResultMap" parameterType="com.jk.pojo.Admin" >
+    select
+    <include refid="Base_Column_List" />
+    from TB_ADMIN
+    where EMAIL = #{loginname,jdbcType=VARCHAR}
+  </select>
+
+  <!--按手机号查询-->
+  <select id="queryAdminByPhone" resultMap="BaseResultMap" parameterType="com.jk.pojo.Admin" >
+    select
+    <include refid="Base_Column_List" />
+    from TB_ADMIN
+    where PHONE = #{loginname,jdbcType=VARCHAR}
+  </select>
+
+  <!--注册-->
+  <select id="queryAdminName" resultMap="BaseResultMap" parameterType="com.jk.pojo.Admin" >
+    select
+    <include refid="Base_Column_List" />
+    from TB_ADMIN
+    where ADMIN_NAME = #{adminName,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from TB_ADMIN
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jk.pojo.Admin" >
+    insert into TB_ADMIN (ID, ADMIN_NAME, PHONE, 
+      EMAIL, PASSWORD, CREATED, 
+      UPDATED, LONGIN_TIME)
+    values (#{id,jdbcType=DECIMAL}, #{adminName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=TIMESTAMP}, #{longinTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <!--注册-->
+  <insert id="addAdmin" parameterType="com.jk.pojo.Admin" useGeneratedKeys="true" keyProperty="id">
+    <selectKey keyProperty="id" keyColumn="id" order="BEFORE" resultType="java.math.BigDecimal">
+      SELECT ATTR.nextval as id FROM dual
+    </selectKey>
+    insert into TB_ADMIN (ID, ADMIN_NAME, PHONE,
+    EMAIL, PASSWORD, CREATED,
+    UPDATED) VALUES
+    (#{id},#{adminName},#{phone},#{email},#{password},#{created},#{updated})
+  </insert>
+
+  <insert id="insertaddAdmin" parameterType="com.jk.pojo.Admin" >
+    insert into TB_ADMIN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="adminName != null" >
+        ADMIN_NAME,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+      <if test="longinTime != null" >
+        LONGIN_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="adminName != null" >
+        #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longinTime != null" >
+        #{longinTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.pojo.Admin" >
+    update TB_ADMIN
+    <set >
+      <if test="adminName != null" >
+        ADMIN_NAME = #{adminName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longinTime != null" >
+        LONGIN_TIME = #{longinTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.pojo.Admin" >
+    update TB_ADMIN
+    set ADMIN_NAME = #{adminName,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP},
+      LONGIN_TIME = #{longinTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateAdmin" parameterType="com.jk.pojo.Admin">
+    update TB_ADMIN
+    set
+      LONGIN_TIME = #{longinTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

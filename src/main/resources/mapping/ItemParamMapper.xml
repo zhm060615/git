@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.ItemParamMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.pojo.ItemParam" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ITEM_CAT_ID" property="itemCatId" jdbcType="DECIMAL" />
+    <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jk.pojo.ItemParam" extends="BaseResultMap" >
+    <result column="PARAM_DATA" property="paramData" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ITEM_CAT_ID, CREATED, UPDATED
+  </sql>
+  <sql id="Blob_Column_List" >
+    PARAM_DATA
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from TB_ITEM_PARAM
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from TB_ITEM_PARAM
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jk.pojo.ItemParam" >
+    insert into TB_ITEM_PARAM (ID, ITEM_CAT_ID, CREATED, 
+      UPDATED, PARAM_DATA)
+    values (#{id,jdbcType=DECIMAL}, #{itemCatId,jdbcType=DECIMAL}, #{created,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=TIMESTAMP}, #{paramData,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.pojo.ItemParam" >
+    insert into TB_ITEM_PARAM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="itemCatId != null" >
+        ITEM_CAT_ID,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+      <if test="paramData != null" >
+        PARAM_DATA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="itemCatId != null" >
+        #{itemCatId,jdbcType=DECIMAL},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paramData != null" >
+        #{paramData,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.pojo.ItemParam" >
+    update TB_ITEM_PARAM
+    <set >
+      <if test="itemCatId != null" >
+        ITEM_CAT_ID = #{itemCatId,jdbcType=DECIMAL},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paramData != null" >
+        PARAM_DATA = #{paramData,jdbcType=CLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jk.pojo.ItemParam" >
+    update TB_ITEM_PARAM
+    set ITEM_CAT_ID = #{itemCatId,jdbcType=DECIMAL},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP},
+      PARAM_DATA = #{paramData,jdbcType=CLOB}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.pojo.ItemParam" >
+    update TB_ITEM_PARAM
+    set ITEM_CAT_ID = #{itemCatId,jdbcType=DECIMAL},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.MailsMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.pojo.Mails" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="SENDER" property="sender" jdbcType="VARCHAR" />
+    <result column="RECIPIENTS" property="recipients" jdbcType="VARCHAR" />
+    <result column="CARBON_COPY" property="carbonCopy" jdbcType="VARCHAR" />
+    <result column="SECRET_MAN" property="secretMan" jdbcType="VARCHAR" />
+    <result column="MAIL_OPTIONS" property="mailOptions" jdbcType="VARCHAR" />
+    <result column="TRANSMISSION_TIME" property="transmissionTime" jdbcType="VARCHAR" />
+    <result column="ISSUCCESS" property="issuccess" jdbcType="DECIMAL" />
+    <result column="ADMINS" property="admins" jdbcType="VARCHAR" />
+    <result column="IP_ADDRESS" property="ipAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jk.pojo.Mails" extends="BaseResultMap" >
+    <result column="ATTACHMENTNAME" property="attachmentname" jdbcType="VARBINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SENDER, RECIPIENTS, CARBON_COPY, SECRET_MAN, MAIL_OPTIONS, TRANSMISSION_TIME, 
+    ISSUCCESS, ADMINS, IP_ADDRESS
+  </sql>
+  <sql id="Blob_Column_List" >
+    ATTACHMENTNAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from TB_MAILS
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TB_MAILS
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jk.pojo.Mails" >
+    insert into TB_MAILS (ID, SENDER, RECIPIENTS, 
+      CARBON_COPY, SECRET_MAN, MAIL_OPTIONS, 
+      TRANSMISSION_TIME, ISSUCCESS, ADMINS, 
+      IP_ADDRESS, ATTACHMENTNAME)
+    values (#{id,jdbcType=DECIMAL}, #{sender,jdbcType=VARCHAR}, #{recipients,jdbcType=VARCHAR}, 
+      #{carbonCopy,jdbcType=VARCHAR}, #{secretMan,jdbcType=VARCHAR}, #{mailOptions,jdbcType=VARCHAR}, 
+      #{transmissionTime,jdbcType=TIMESTAMP}, #{issuccess,jdbcType=DECIMAL}, #{admins,jdbcType=VARCHAR}, 
+      #{ipAddress,jdbcType=VARCHAR}, #{attachmentname,jdbcType=VARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.pojo.Mails" >
+    <selectKey keyColumn="id" keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      select mail.nextval as id from dual
+    </selectKey>
+    insert into TB_MAILS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sender != null" >
+        SENDER,
+      </if>
+      <if test="recipients != null" >
+        RECIPIENTS,
+      </if>
+      <if test="carbonCopy != null" >
+        CARBON_COPY,
+      </if>
+      <if test="secretMan != null" >
+        SECRET_MAN,
+      </if>
+      <if test="mailOptions != null" >
+        MAIL_OPTIONS,
+      </if>
+      <if test="transmissionTime != null" >
+        TRANSMISSION_TIME,
+      </if>
+      <if test="issuccess != null" >
+        ISSUCCESS,
+      </if>
+      <if test="admins != null" >
+        ADMINS,
+      </if>
+      <if test="ipAddress != null" >
+        IP_ADDRESS,
+      </if>
+      <if test="attachmentname != null" >
+        ATTACHMENTNAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="sender != null" >
+        #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="recipients != null" >
+        #{recipients,jdbcType=VARCHAR},
+      </if>
+      <if test="carbonCopy != null" >
+        #{carbonCopy,jdbcType=VARCHAR},
+      </if>
+      <if test="secretMan != null" >
+        #{secretMan,jdbcType=VARCHAR},
+      </if>
+      <if test="mailOptions != null" >
+        #{mailOptions,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionTime != null" >
+        #{transmissionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuccess != null" >
+        #{issuccess,jdbcType=DECIMAL},
+      </if>
+      <if test="admins != null" >
+        #{admins,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null" >
+        #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentname != null" >
+        #{attachmentname,jdbcType=VARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.pojo.Mails" >
+    update TB_MAILS
+    <set >
+      <if test="sender != null" >
+        SENDER = #{sender,jdbcType=VARCHAR},
+      </if>
+      <if test="recipients != null" >
+        RECIPIENTS = #{recipients,jdbcType=VARCHAR},
+      </if>
+      <if test="carbonCopy != null" >
+        CARBON_COPY = #{carbonCopy,jdbcType=VARCHAR},
+      </if>
+      <if test="secretMan != null" >
+        SECRET_MAN = #{secretMan,jdbcType=VARCHAR},
+      </if>
+      <if test="mailOptions != null" >
+        MAIL_OPTIONS = #{mailOptions,jdbcType=VARCHAR},
+      </if>
+      <if test="transmissionTime != null" >
+        TRANSMISSION_TIME = #{transmissionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuccess != null" >
+        ISSUCCESS = #{issuccess,jdbcType=DECIMAL},
+      </if>
+      <if test="admins != null" >
+        ADMINS = #{admins,jdbcType=VARCHAR},
+      </if>
+      <if test="ipAddress != null" >
+        IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentname != null" >
+        ATTACHMENTNAME = #{attachmentname,jdbcType=VARBINARY},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jk.pojo.Mails" >
+    update TB_MAILS
+    set SENDER = #{sender,jdbcType=VARCHAR},
+      RECIPIENTS = #{recipients,jdbcType=VARCHAR},
+      CARBON_COPY = #{carbonCopy,jdbcType=VARCHAR},
+      SECRET_MAN = #{secretMan,jdbcType=VARCHAR},
+      MAIL_OPTIONS = #{mailOptions,jdbcType=VARCHAR},
+      TRANSMISSION_TIME = #{transmissionTime,jdbcType=TIMESTAMP},
+      ISSUCCESS = #{issuccess,jdbcType=DECIMAL},
+      ADMINS = #{admins,jdbcType=VARCHAR},
+      IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR},
+      ATTACHMENTNAME = #{attachmentname,jdbcType=VARBINARY}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.pojo.Mails" >
+    update TB_MAILS
+    set SENDER = #{sender,jdbcType=VARCHAR},
+      RECIPIENTS = #{recipients,jdbcType=VARCHAR},
+      CARBON_COPY = #{carbonCopy,jdbcType=VARCHAR},
+      SECRET_MAN = #{secretMan,jdbcType=VARCHAR},
+      MAIL_OPTIONS = #{mailOptions,jdbcType=VARCHAR},
+      TRANSMISSION_TIME = #{transmissionTime,jdbcType=TIMESTAMP},
+      ISSUCCESS = #{issuccess,jdbcType=DECIMAL},
+      ADMINS = #{admins,jdbcType=VARCHAR},
+      IP_ADDRESS = #{ipAddress,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

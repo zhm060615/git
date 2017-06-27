@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.ContentMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.pojo.Content" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="SUB_TITLE" property="subTitle" jdbcType="VARCHAR" />
+    <result column="TITLE_DESC" property="titleDesc" jdbcType="VARCHAR" />
+    <result column="URL" property="url" jdbcType="VARCHAR" />
+    <result column="PIC" property="pic" jdbcType="VARCHAR" />
+    <result column="PIC2" property="pic2" jdbcType="VARCHAR" />
+    <result column="CREATED" property="created" jdbcType="TIMESTAMP" />
+    <result column="UPDATED" property="updated" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.jk.pojo.Content" extends="BaseResultMap" >
+    <result column="CONTENT" property="content" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CATEGORY_ID, TITLE, SUB_TITLE, TITLE_DESC, URL, PIC, PIC2, CREATED, UPDATED
+  </sql>
+  <sql id="Blob_Column_List" >
+    CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from TB_CONTENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from TB_CONTENT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.jk.pojo.Content" >
+    insert into TB_CONTENT (ID, CATEGORY_ID, TITLE, 
+      SUB_TITLE, TITLE_DESC, URL, 
+      PIC, PIC2, CREATED, 
+      UPDATED, CONTENT)
+    values (#{id,jdbcType=DECIMAL}, #{categoryId,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, 
+      #{subTitle,jdbcType=VARCHAR}, #{titleDesc,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{pic,jdbcType=VARCHAR}, #{pic2,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=TIMESTAMP}, #{content,jdbcType=CLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.pojo.Content" >
+    insert into TB_CONTENT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="subTitle != null" >
+        SUB_TITLE,
+      </if>
+      <if test="titleDesc != null" >
+        TITLE_DESC,
+      </if>
+      <if test="url != null" >
+        URL,
+      </if>
+      <if test="pic != null" >
+        PIC,
+      </if>
+      <if test="pic2 != null" >
+        PIC2,
+      </if>
+      <if test="created != null" >
+        CREATED,
+      </if>
+      <if test="updated != null" >
+        UPDATED,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null" >
+        #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="titleDesc != null" >
+        #{titleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="pic2 != null" >
+        #{pic2,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jk.pojo.Content" >
+    update TB_CONTENT
+    <set >
+      <if test="categoryId != null" >
+        CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="subTitle != null" >
+        SUB_TITLE = #{subTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="titleDesc != null" >
+        TITLE_DESC = #{titleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        URL = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        PIC = #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="pic2 != null" >
+        PIC2 = #{pic2,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null" >
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updated != null" >
+        UPDATED = #{updated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=CLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.jk.pojo.Content" >
+    update TB_CONTENT
+    set CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      TITLE = #{title,jdbcType=VARCHAR},
+      SUB_TITLE = #{subTitle,jdbcType=VARCHAR},
+      TITLE_DESC = #{titleDesc,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      PIC = #{pic,jdbcType=VARCHAR},
+      PIC2 = #{pic2,jdbcType=VARCHAR},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP},
+      CONTENT = #{content,jdbcType=CLOB}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jk.pojo.Content" >
+    update TB_CONTENT
+    set CATEGORY_ID = #{categoryId,jdbcType=DECIMAL},
+      TITLE = #{title,jdbcType=VARCHAR},
+      SUB_TITLE = #{subTitle,jdbcType=VARCHAR},
+      TITLE_DESC = #{titleDesc,jdbcType=VARCHAR},
+      URL = #{url,jdbcType=VARCHAR},
+      PIC = #{pic,jdbcType=VARCHAR},
+      PIC2 = #{pic2,jdbcType=VARCHAR},
+      CREATED = #{created,jdbcType=TIMESTAMP},
+      UPDATED = #{updated,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>
