@@ -1,0 +1,10 @@
+*.project
+*.classpath
+target
+*.idea
+*.iml
+pom.xml
+common
+easyui1.4.5
+js
+*.settings
